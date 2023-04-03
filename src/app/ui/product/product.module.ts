@@ -5,7 +5,7 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
 
 @NgModule({
   declarations: [ProductListComponent, ProductDetailComponent],
-  entryComponents: [ProductListComponent],
   imports: [CommonModule],
+  exports: [CommonModule],
 })
 export class ProductModule {}

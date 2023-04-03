@@ -10,7 +10,7 @@ import {
   styleUrls: ['./product-list.component.css'],
 })
 export class ProductListComponent {
-  private products: ProductResponse = [];
+  products: ProductResponse = [];
 
   constructor(private productsService: ProductdataService) {}
 
