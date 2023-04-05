@@ -16,7 +16,7 @@ export type ProductResponse = Product[];
 @Injectable({
   providedIn: 'root',
 })
-export class ProductdataService {
+export class ProductAPIService {
   private URL: string = `https://fakestoreapi.com/products/`;
 
   constructor(private http: HttpClient) {}

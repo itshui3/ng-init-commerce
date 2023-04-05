@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { Subscription } from 'rxjs';
 import {
-  ProductdataService,
+  ProductAPIService,
   ProductResponse,
-} from '../../../services/productdata.service';
+} from '../../../services/api/productAPI.service';
 
 @Component({
   selector: 'app-product-list',
@@ -11,13 +12,18 @@ import {
 })
 export class ProductListComponent {
   products: ProductResponse = [];
+  service: Subscription = new Subscription();
 
-  constructor(private productsService: ProductdataService) {}
+  constructor(private productsService: ProductAPIService) {}
 
   ngOnInit() {
-    this.productsService.fetchSomeProducts().subscribe((products) => {
-      this.products = products;
-      console.log('fetched products', products);
+    this.service = this.productsService.fetchSomeProducts().subscribe({
+      next: (products) => (this.products = products),
+      error: console.error,
     });
+  }
+
+  ngOnDestroy() {
+    this.service.unsubscribe();
   }
 }

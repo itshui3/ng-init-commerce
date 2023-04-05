@@ -1,6 +1,29 @@
-<h2>product-list works!</h2>
-<ul *ngFor="let product of products">
-  <li>
-    <h3>{{ product.title }}</h3>
+<div class="productHeader">
+  <h1 class="productHeading">.products</h1>
+</div>
+
+<ul class="productList">
+  <li *ngFor="let product of products" class="productContainer">
+    <a class="productItemLinkWrapper" routerLink="/products/{{ product.id }}">
+      <div class="productImageContainer">
+        <img src="{{ product.image }}" class="productImage" />
+      </div>
+      <div class="productContainerRight">
+        <h4>
+          {{ product.title }}
+        </h4>
+        <p>{{ product.description }}</p>
+      </div>
+    </a>
   </li>
 </ul>
+
+<!--
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
+  rather: { rate: number; count: number };
+-->
