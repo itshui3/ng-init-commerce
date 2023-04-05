@@ -3,7 +3,7 @@
 </div>
 
 <ul class="productList">
-  <li *ngFor="let product of products" class="productContainer">
+  <li *ngFor="let product of products$ | async" class="productContainer">
     <a class="productItemLinkWrapper" routerLink="/products/{{ product.id }}">
       <div class="productImageContainer">
         <img src="{{ product.image }}" class="productImage" />
@@ -17,13 +17,3 @@
     </a>
   </li>
 </ul>
-
-<!--
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  category: string;
-  image: string;
-  rather: { rate: number; count: number };
--->
