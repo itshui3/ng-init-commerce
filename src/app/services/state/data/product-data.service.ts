@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map, switchMap } from 'rxjs';
-import {
-  ProductAPIService,
-  ProductResponse,
-  Product,
-} from '../../api/productAPI.service';
+import { BehaviorSubject, Observable, map } from 'rxjs';
+import { ProductAPIService, Product } from '../../api/productAPI.service';
 
 export interface ProductData {
   [id: string]: Product;
