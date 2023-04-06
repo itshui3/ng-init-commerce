@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-interface Product {
+export interface Product {
   id: number;
   title: string;
   price: number;
@@ -17,11 +17,17 @@ export type ProductResponse = Product[];
   providedIn: 'root',
 })
 export class ProductAPIService {
-  private URL: string = `https://fakestoreapi.com/products/`;
+  private productsURL = `https://fakestoreapi.com/products`;
+  private productURL = (id: string) =>
+    `https://fakestoreapi.com/products/${id}`;
 
   constructor(private http: HttpClient) {}
 
-  fetchSomeProducts(): Observable<ProductResponse> {
-    return this.http.get<ProductResponse>(this.URL);
+  public fetchSomeProducts(): Observable<ProductResponse> {
+    return this.http.get<ProductResponse>(this.productsURL);
+  }
+
+  public fetchProduct(id: string): Observable<Product> {
+    return this.http.get<Product>(this.productURL(id));
   }
 }

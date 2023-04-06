@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+
 import {
-  ProductAPIService,
-  ProductResponse,
-} from '../../../services/api/productAPI.service';
-import { ProductDataService } from '../../../services/state/data/product-data.service';
+  ProductDataService,
+  ProductData,
+} from '../../../services/state/data/product-data.service';
 
 @Component({
   selector: 'app-product-list',
@@ -12,7 +12,7 @@ import { ProductDataService } from '../../../services/state/data/product-data.se
   styleUrls: ['./product-list.component.css'],
 })
 export class ProductListComponent implements OnInit {
-  public products$: Observable<ProductResponse> | undefined;
+  public products$: Observable<ProductData> | undefined;
   constructor(private productState: ProductDataService) {}
   ngOnInit() {
     this.products$ = this.productState.getProducts();
