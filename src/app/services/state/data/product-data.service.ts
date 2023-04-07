@@ -48,7 +48,6 @@ export class ProductDataService {
           component subscribes to single product fetch,
           state subscribes to products fetch
         */
-        setTimeout(() => this.fetchProducts());
 
         return this.fetchProduct(id);
 
@@ -69,7 +68,10 @@ export class ProductDataService {
   }
 
   private fetchProduct(id: string): Observable<Product> {
-    return this.service.fetchProduct(id);
+    return this.service.fetchProduct(id).pipe((product) => {
+      setTimeout(() => this.fetchProducts());
+      return product;
+    });
   }
 
   // helpers

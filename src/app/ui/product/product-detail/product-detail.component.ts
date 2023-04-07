@@ -20,4 +20,8 @@ export class ProductDetailComponent implements OnInit {
       .pipe<string>(map((p) => p['productId']))
       .subscribe((id) => (this.product$ = this.productState.getProduct(id)));
   }
+
+  public logRender() {
+    console.log(`successfully rendered product detail component`);
+  }
 }
