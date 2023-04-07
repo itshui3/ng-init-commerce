@@ -74,10 +74,14 @@ export class ProductDataService {
 
   // helpers
   private shouldFetchProducts(): boolean {
+    console.log(
+      'checking if we should fetch products, this.lastFetchedProducts: ',
+      this.lastFetchedProducts
+    );
     const oneHourInMs = 60 * 60 * 1000;
     if (
-      !this.lastFetchedProducts ||
-      new Date().getTime() - this.lastFetchedProducts.getTime() > oneHourInMs
+      !this.lastFetchedProducts
+      // || new Date().getTime() - this.lastFetchedProducts.getTime() > oneHourInMs
     ) {
       return true;
     } else {
@@ -86,10 +90,11 @@ export class ProductDataService {
   }
 
   private fetchProducts(): void {
+    console.log('fetching products...');
     this.service.fetchSomeProducts().subscribe((products) => {
+      this.lastFetchedProducts = new Date();
       this.products.next(products);
-
-      setTimeout(() => this.mapProducts(products));
+      this.mapProducts(products);
     });
   }
 
