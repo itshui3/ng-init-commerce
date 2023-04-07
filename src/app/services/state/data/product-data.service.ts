@@ -80,8 +80,8 @@ export class ProductDataService {
     );
     const oneHourInMs = 60 * 60 * 1000;
     if (
-      !this.lastFetchedProducts
-      // || new Date().getTime() - this.lastFetchedProducts.getTime() > oneHourInMs
+      !this.lastFetchedProducts ||
+      new Date().getTime() - this.lastFetchedProducts.getTime() > oneHourInMs
     ) {
       return true;
     } else {
