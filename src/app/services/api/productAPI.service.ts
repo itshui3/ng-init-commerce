@@ -11,7 +11,7 @@ export interface Product {
   image: string;
   rather: { rate: number; count: number };
 }
-export type ProductResponse = Product[];
+export type ProductList = Product[];
 
 @Injectable({
   providedIn: 'root',
@@ -23,10 +23,11 @@ export class ProductAPIService {
 
   constructor(private http: HttpClient) {}
 
-  public fetchSomeProducts(): Observable<ProductResponse> {
-    return this.http.get<ProductResponse>(this.productsURL);
+  public fetchSomeProducts(): Observable<ProductList> {
+    return this.http.get<ProductList>(this.productsURL);
   }
 
+  // needs error handling in case user navigates manually to non-existent product id
   public fetchProduct(id: string): Observable<Product> {
     return this.http.get<Product>(this.productURL(id));
   }

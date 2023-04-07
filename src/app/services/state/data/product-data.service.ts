@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, map } from 'rxjs';
-import { ProductAPIService, Product } from '../../api/productAPI.service';
+import {
+  ProductAPIService,
+  Product,
+  ProductList,
+} from '../../api/productAPI.service';
 
-export interface ProductData {
+export interface ProductMap {
   [id: string]: Product;
 }
 
@@ -14,22 +18,27 @@ export class ProductDataService {
   private lastFetchedProducts: Date | undefined;
   private service: ProductAPIService;
 
-  private products: BehaviorSubject<ProductData> = new BehaviorSubject(
-    {} as ProductData
+  private products: BehaviorSubject<ProductList> = new BehaviorSubject(
+    [] as ProductList
   );
   public products$ = this.products.asObservable();
+
+  private productMap: BehaviorSubject<ProductMap> = new BehaviorSubject(
+    {} as ProductMap
+  );
+  public productMap$ = this.productMap.asObservable();
 
   constructor(service: ProductAPIService) {
     this.service = service;
   }
 
   // access
-  public getProducts(): Observable<ProductData> {
+  public getProducts(): Observable<ProductList> {
     if (this.shouldFetchProducts()) {
-      this.fetchSubscribePushProducts();
+      this.fetchProducts();
     }
 
-    return this.products$;
+    return this.products$.pipe(map((products) => Object.values(products)));
   }
 
   public getProduct(id: string): Observable<Product> {
@@ -39,7 +48,8 @@ export class ProductDataService {
           component subscribes to single product fetch,
           state subscribes to products fetch
         */
-        this.fetchSubscribePushProducts();
+        setTimeout(() => this.fetchProducts());
+
         return this.fetchProduct(id);
 
       case false:
@@ -55,7 +65,7 @@ export class ProductDataService {
 
   // strategies
   private pipeProduct(id: string): Observable<Product> {
-    return this.products$.pipe(map((products) => products[id]));
+    return this.productMap$.pipe(map((products) => products[id]));
   }
 
   private fetchProduct(id: string): Observable<Product> {
@@ -75,14 +85,21 @@ export class ProductDataService {
     }
   }
 
-  private fetchSubscribePushProducts(): void {
+  private fetchProducts(): void {
     this.service.fetchSomeProducts().subscribe((products) => {
-      this.products.next(
-        products.reduce((productsObj, product) => {
-          productsObj[product.id] = product;
-          return productsObj;
-        }, {} as ProductData)
-      );
+      this.products.next(products);
+
+      setTimeout(() => this.mapProducts(products));
     });
+  }
+
+  private mapProducts(products: ProductList): void {
+    console.log('Mapping Products...');
+    this.productMap.next(
+      products.reduce((map, product) => {
+        map[product.id] = product;
+        return map;
+      }, {} as ProductMap)
+    );
   }
 }

@@ -2,8 +2,8 @@
   <h1 class="productHeading">.products</h1>
 </div>
 
-<ul class="productList">
-  <li *ngFor="let product of products$ | async" class="productContainer">
+<ul class="productList" *ngIf="products$ | async as products">
+  <li *ngFor="let product of products" class="productContainer">
     <a class="productItemLinkWrapper" routerLink="/products/{{ product.id }}">
       <div class="productImageContainer">
         <img src="{{ product.image }}" class="productImage" />
@@ -16,4 +16,7 @@
       </div>
     </a>
   </li>
+  {{
+    logRender()
+  }}
 </ul>
