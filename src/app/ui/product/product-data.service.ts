@@ -4,7 +4,7 @@ import {
   ProductAPIService,
   Product,
   ProductList,
-} from '../../api/productAPI.service';
+} from '../../services/api/productAPI.service';
 
 export interface ProductMap {
   [id: string]: Product;

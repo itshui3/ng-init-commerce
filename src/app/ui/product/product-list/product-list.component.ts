@@ -1,7 +1,7 @@
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { ProductDataService } from '../../../services/state/data/product-data.service';
+import { ProductDataService } from '../product-data.service';
 import { ProductList } from 'src/app/services/api/productAPI.service';
 
 @Component({
@@ -19,8 +19,8 @@ export class ProductListComponent implements OnInit {
       )
     );
   };
-  constructor(private productState: ProductDataService) {}
+  constructor(private _productState: ProductDataService) {}
   ngOnInit() {
-    this.products$ = this.productState.getProducts();
+    this.products$ = this._productState.getProducts();
   }
 }

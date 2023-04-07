@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/services/api/productAPI.service';
-import { ProductDataService } from 'src/app/services/state/data/product-data.service';
+import { ProductDataService } from 'src/app/ui/product/product-data.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -12,13 +12,13 @@ import { ProductDataService } from 'src/app/services/state/data/product-data.ser
 export class ProductDetailComponent implements OnInit {
   public product$: Observable<Product> | undefined;
   constructor(
-    private route: ActivatedRoute,
-    private productState: ProductDataService
+    private _route: ActivatedRoute,
+    private _productState: ProductDataService
   ) {}
   ngOnInit() {
-    this.route.params
+    this._route.params
       .pipe<string>(map((p) => p['productId']))
-      .subscribe((id) => (this.product$ = this.productState.getProduct(id)));
+      .subscribe((id) => (this.product$ = this._productState.getProduct(id)));
   }
 
   public logRender() {
