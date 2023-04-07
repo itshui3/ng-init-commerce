@@ -1,0 +1,113 @@
+.productPage {
+  display: flex;
+  justify-content: space-between;
+  padding: 35px 15px 10px 15px;
+}
+
+.productDescriptionContainer {
+  max-width: 70%;
+}
+
+.productImgContainer {
+  max-height: 400px;
+  max-width: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.productImg {
+  max-width: 400px;
+  max-height: 400px;
+}
+
+.productTitle {
+  margin-top: 30px;
+}
+
+.productDescription {
+  margin-top: 30px;
+}
+
+.priceAndAvailabilityContainer {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  width: 175px;
+  padding: 25px 20px;
+}
+
+.priceContainer {
+  display: flex;
+  align-items: flex-start;
+}
+
+.dollarSign {
+  font-size: 12px;
+  font-weight: 100;
+  margin-top: 3px;
+}
+
+.dollars {
+  font-size: 25px;
+}
+
+.cents {
+  font-size: 12px;
+  margin-top: 10px;
+  font-weight: 100;
+}
+
+.stepperContainer {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  width: 100px;
+  gap: 8px;
+}
+
+.qtyText {
+  font-size: 15px;
+}
+
+.qtyControls {
+  display: flex;
+  flex-direction: column;
+}
+
+.stepperBtn {
+  border: none;
+  background-color: #ffffff;
+}
+
+.stepperInnerCaret {
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  width: 4px;
+  height: 4px;
+}
+
+.caretDecrease {
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  width: 4px;
+  height: 4px;
+  transform: rotate(-135deg);
+  /* bottom: 0; */
+}
+
+.caretIncrease {
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  width: 4px;
+  height: 4px;
+  transform: rotate(45deg);
+  /* top: 0; */
+}
+
+.addToCartBtn {
+  margin-top: 12px;
+  font-size: 15px;
+  padding: 10px;
+}
