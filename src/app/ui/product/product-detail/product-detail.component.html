@@ -1,18 +1,18 @@
-<div *ngIf="product$ | async as product" class="productPage">
+<div *ngIf="product$" class="productPage">
   <div class="productDescriptionContainer">
     <div class="productImgContainer">
-      <img class="productImg" src="{{ product.image }}" />
+      <img class="productImg" src="{{ product$.image }}" />
     </div>
-    <h1 class="productTitle">{{ product.title }}</h1>
+    <h1 class="productTitle">{{ product$.title }}</h1>
     <hr />
-    <p class="productDescription">{{ product.description }}</p>
+    <p class="productDescription">{{ product$.description }}</p>
   </div>
 
   <div class="priceAndAvailabilityContainer">
     <h3 class="priceContainer">
       <span class="dollarSign">$</span>
-      <span class="dollars">{{ priceDismantler(product.price).dollar }}</span>
-      <span class="cents">{{ priceDismantler(product.price).cents }}</span>
+      <span class="dollars">{{ priceDismantler(product$.price).dollar }}</span>
+      <span class="cents">{{ priceDismantler(product$.price).cents }}</span>
     </h3>
     <div class="stepperContainer">
       <p class="qtyText">qty: {{ stepperQty }}</p>
@@ -27,9 +27,7 @@
       </div>
     </div>
 
-    <button class="addToCartBtn" type="submit" (submit)="addToCart()">
-      Add to Cart
-    </button>
+    <button class="addToCartBtn" (click)="addToCart()">Add to Cart</button>
   </div>
 
   <!-- {{ logRender() }} -->

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { map } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from 'src/app/services/api/productAPI.service';
 import { ProductDataService } from 'src/app/ui/product/product-data.service';
+import { CartDataService } from '../../cart/cart-data.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -10,16 +11,21 @@ import { ProductDataService } from 'src/app/ui/product/product-data.service';
   styleUrls: ['./product-detail.component.css'],
 })
 export class ProductDetailComponent implements OnInit {
-  public product$: Observable<Product> | undefined;
+  public product$: Product | undefined;
   public stepperQty: number = 1;
   constructor(
     private _route: ActivatedRoute,
-    private _productState: ProductDataService
+    private _productState: ProductDataService,
+    private _cartService: CartDataService
   ) {}
   ngOnInit() {
     this._route.params
       .pipe<string>(map((p) => p['productId']))
-      .subscribe((id) => (this.product$ = this._productState.getProduct(id)));
+      .subscribe((id) =>
+        this._productState
+          .getProduct(id)
+          .subscribe((product) => (this.product$ = product))
+      );
   }
 
   public increment() {
@@ -33,15 +39,8 @@ export class ProductDetailComponent implements OnInit {
   }
 
   public addToCart() {
-    if (this.stepperQty > 0) {
-      // this.cart.add(product$, quantity)
-      /*
-        -pass as observable for most up to date info
-        -then post to fakestoreapi.com so it is externally managed
-
-        next week: 
-        -decide how cart page data retrieval is performed
-      */
+    if (this.stepperQty > 0 && this.product$) {
+      this._cartService.addToCart(this.product$?.id, this.stepperQty);
     }
   }
 
