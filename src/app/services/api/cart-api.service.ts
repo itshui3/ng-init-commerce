@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
+import { CartWithProducts } from 'src/app/ui/cart/cart-data.service';
 
 export interface CartFromSource {
   date: string;
@@ -9,15 +10,18 @@ export interface CartFromSource {
   userId: number;
 }
 
+type CartToSource = Pick<CartFromSource, 'date' | 'userId' | 'products'>;
+
 @Injectable({
   providedIn: 'root',
 })
 export class CartAPIService {
   private cartsURL = `https://fakestoreapi.com/carts`;
+  private cartURL = `https://fakestoreapi.com/carts/1`;
   constructor(private http: HttpClient) {}
 
   public getCart(): Observable<CartFromSource> {
-    return this.http.get<CartFromSource>(this.cartsURL + '/1');
+    return this.http.get<CartFromSource>(this.cartURL);
   }
 
   public postToCart(productId: number, quantity: number) {
@@ -33,6 +37,43 @@ export class CartAPIService {
       userId: 1,
       date: formattedDate,
       products: [{ productId, quantity }],
+    });
+  }
+
+  public deleteCartItem(
+    productId: number,
+    prevCart$: Observable<CartWithProducts>
+  ): void {
+    const prevCartTake$ = prevCart$.pipe(take(1));
+    prevCartTake$.subscribe((prevCart) => {
+      const newSourceCart: CartToSource = {
+        userId: prevCart.userId,
+        date: prevCart.date,
+        products: prevCart.products
+          .filter((product) => product.id !== productId)
+          .map((product) => {
+            return {
+              productId: product.id,
+              quantity: product.quantity,
+            };
+          }),
+      };
+      this.http.put<{ id: number }>(this.cartURL, newSourceCart);
+    });
+  }
+
+  public updateItemQty(
+    productId: number,
+    quantity: number,
+    prevCart$: Observable<CartWithProducts>
+  ): void {
+    prevCart$.subscribe((prevCart) => {
+      const newSourceCart: CartToSource = {
+        userId: prevCart.userId,
+        date: prevCart.date,
+        products: [{ productId, quantity }],
+      };
+      this.http.patch<{ id: number }>(this.cartURL, newSourceCart);
     });
   }
 }

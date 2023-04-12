@@ -25,7 +25,6 @@ export class ProductDataService {
   public productMap$ = this.products$.pipe(
     map((products) =>
       products.reduce((map, product) => {
-        console.log('products are being mapped');
         map[product.id] = product;
         return map;
       }, {} as ProductMap)

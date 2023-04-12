@@ -4,6 +4,7 @@ import {
   CartFromSource,
 } from 'src/app/services/api/cart-api.service';
 import {
+  take,
   map,
   tap,
   BehaviorSubject,
@@ -117,5 +118,21 @@ export class CartDataService {
         });
       })
     );
+  }
+
+  public deleteCartItem(id: number): void {
+    this._cartAPIService.deleteCartItem(id, this.cart$);
+
+    this.cart$
+      .pipe(
+        take(1),
+        tap((cart) => {
+          this.cart.next({
+            ...cart,
+            products: cart.products.filter((product) => product.id !== id),
+          });
+        })
+      )
+      .subscribe();
   }
 }

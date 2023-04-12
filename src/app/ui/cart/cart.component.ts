@@ -14,4 +14,12 @@ export class CartComponent implements OnInit {
     this.cartData$ = this._cartData.cart$;
     this._cartData.initCart();
   }
+
+  public deleteItem(id: number): void {
+    this._cartData.deleteCartItem(id);
+  }
+
+  public incrementQty(): void {}
+
+  public decrementQty(): void {}
 }
