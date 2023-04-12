@@ -1,0 +1,72 @@
+.cartContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.itemRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.productInfoContainer {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+}
+
+.purchaseInfoContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.image {
+  width: 200px;
+}
+
+.stepperContainer {
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  width: 100px;
+  gap: 8px;
+}
+
+.qtyText {
+  font-size: 15px;
+}
+
+.qtyControls {
+  display: flex;
+  flex-direction: column;
+}
+
+.stepperBtn {
+  border: none;
+  background-color: #ffffff;
+}
+
+.stepperInnerCaret {
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  width: 4px;
+  height: 4px;
+}
+
+.caretDecrease {
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  width: 4px;
+  height: 4px;
+  transform: rotate(-135deg);
+  /* bottom: 0; */
+}
+
+.caretIncrease {
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  width: 4px;
+  height: 4px;
+  transform: rotate(45deg);
+  /* top: 0; */
+}

@@ -1,13 +1,26 @@
 <div *ngIf="cartData$ | async as cartData">
-  {{ cartData.id }}
-  <ul>
-    <li *ngFor="let product of cartData['products']">
-      <p>id: {{ product.id }}</p>
-      <p>title: {{ product.title }}</p>
-      <p>price: {{ product.price }}</p>
-      <p>qty: {{ product.quantity }}</p>
-      <p>description: {{ product.description }}</p>
-      <p>category: {{ product.category }}</p>
+  <ul class="cartContainer">
+    <li class="itemRow" *ngFor="let product of cartData['products']">
+      <div class="productInfoContainer">
+        <h3>{{ product.title }}</h3>
+        <img class="image" src="{{ product.image }}" />
+      </div>
+      <div class="purchaseInfoContainer">
+        <h3>price: {{ product.price }}</h3>
+        <h3>qty: {{ product.quantity }}</h3>
+        <div class="stepperContainer">
+          <p class="qtyText">qty: {{ product.quantity }}</p>
+
+          <div class="qtyControls">
+            <button class="stepperBtn">
+              <div class="caretIncrease"></div>
+            </button>
+            <button class="stepperBtn">
+              <div class="caretDecrease"></div>
+            </button>
+          </div>
+        </div>
+      </div>
     </li>
   </ul>
 </div>
