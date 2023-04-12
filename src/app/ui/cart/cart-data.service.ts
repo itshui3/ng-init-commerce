@@ -74,8 +74,7 @@ export class CartDataService {
   }
 
   public async addToCart(id: number, qty: number) {
-    const cartState = await firstValueFrom(this.cart$);
-    if (JSON.stringify(cartState) === '{}') {
+    if (!this.alreadyFetched) {
       console.log('resolving empty cartState case');
       this.initCart();
     }
@@ -89,40 +88,46 @@ export class CartDataService {
       this._productStateService.productMap$,
     ];
 
-    combineLatest(cartStateRespMap).pipe(
-      tap((comboCart) => {
-        const entireCart = comboCart[0];
-        const postRespCart = comboCart[1];
-        const productMap = comboCart[2];
+    combineLatest(cartStateRespMap)
+      .pipe(
+        take(1),
+        tap((comboCart) => {
+          const entireCart = comboCart[0];
+          const postRespCart = comboCart[1];
+          const productMap = comboCart[2];
 
-        const productsQtyHash = entireCart.products.reduce(
-          (productsHash, product) => {
-            productsHash[product.id] = product.quantity;
-            return productsHash;
-          },
-          {} as { [id: string]: number }
-        );
+          const productsQtyHash = entireCart.products.reduce(
+            (productsHash, product) => {
+              productsHash[product.id] = product.quantity;
+              return productsHash;
+            },
+            {} as { [id: string]: number }
+          );
+          console.log('productsQtyHash', productsQtyHash);
+          console.log('postRespCart.products', postRespCart.products);
+          postRespCart.products.forEach((product) => {
+            if (product.productId in productsQtyHash) {
+              productsQtyHash[product.productId] += product.quantity;
+            } else {
+              productsQtyHash[product.productId] = product.quantity;
+            }
+          });
 
-        postRespCart.products.forEach((product) => {
-          if (product.productId in productsQtyHash) {
-            productsQtyHash[product.productId] += product.quantity;
-          } else {
-            productsQtyHash[product.productId] = product.quantity;
-          }
-        });
+          const mergedProducts = Object.entries(productsQtyHash).map(
+            ([k, v]) => {
+              return { ...productMap[+k], quantity: v };
+            }
+          );
 
-        const mergedProducts = Object.entries(productsQtyHash).map(([k, v]) => {
-          return { ...productMap[+k], quantity: v };
-        });
-
-        this.cart.next({
-          id: postRespCart.id,
-          userId: postRespCart.userId,
-          date: postRespCart.date,
-          products: mergedProducts,
-        });
-      })
-    );
+          this.cart.next({
+            id: postRespCart.id,
+            userId: postRespCart.userId,
+            date: postRespCart.date,
+            products: mergedProducts,
+          });
+        })
+      )
+      .subscribe();
   }
 
   public deleteCartItem(id: number): void {
