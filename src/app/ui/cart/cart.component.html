@@ -2,7 +2,9 @@
   <ul class="cartContainer">
     <li class="itemRow" *ngFor="let product of cartData['products']">
       <div class="productInfoContainer">
-        <h3>{{ product.title }}</h3>
+        <a routerLink="/products/{{ product.id }}"
+          ><h3>{{ product.title }}</h3></a
+        >
         <img class="image" src="{{ product.image }}" />
       </div>
       <div class="purchaseInfoContainer">

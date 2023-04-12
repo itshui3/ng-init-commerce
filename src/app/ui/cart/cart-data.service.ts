@@ -32,6 +32,7 @@ export interface CartWithProducts {
   providedIn: 'root',
 })
 export class CartDataService {
+  private alreadyFetched: boolean = false;
   private cart: BehaviorSubject<CartWithProducts> = new BehaviorSubject(
     {} as CartWithProducts
   );
@@ -42,6 +43,10 @@ export class CartDataService {
   ) {}
 
   public async initCart() {
+    if (this.alreadyFetched === true) {
+      return;
+    }
+    this.alreadyFetched = true;
     const productMapAndCart$ = combineLatest([
       this._productStateService.getProductMap(),
       this._cartAPIService.getCart(),
