@@ -44,8 +44,7 @@ export class CartAPIService {
     productId: number,
     prevCart$: Observable<CartWithProducts>
   ): void {
-    const prevCartTake$ = prevCart$.pipe(take(1));
-    prevCartTake$.subscribe((prevCart) => {
+    prevCart$.pipe(take(1)).subscribe((prevCart) => {
       const newSourceCart: CartToSource = {
         userId: prevCart.userId,
         date: prevCart.date,
@@ -67,7 +66,7 @@ export class CartAPIService {
     quantity: number,
     prevCart$: Observable<CartWithProducts>
   ): void {
-    prevCart$.subscribe((prevCart) => {
+    prevCart$.pipe(take(1)).subscribe((prevCart) => {
       const newSourceCart: CartToSource = {
         userId: prevCart.userId,
         date: prevCart.date,

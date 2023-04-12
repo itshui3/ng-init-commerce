@@ -135,4 +135,29 @@ export class CartDataService {
       )
       .subscribe();
   }
+
+  public modifyItemQty(id: number, newQty: number): void {
+    this._cartAPIService.updateItemQty(id, newQty, this.cart$);
+
+    this.cart$
+      .pipe(
+        take(1),
+        tap((cart) => {
+          this.cart.next({
+            ...cart,
+            products: cart.products.map((product) => {
+              if (product.id === id) {
+                return {
+                  ...product,
+                  quantity: newQty,
+                };
+              } else {
+                return product;
+              }
+            }),
+          });
+        })
+      )
+      .subscribe();
+  }
 }

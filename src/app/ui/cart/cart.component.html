@@ -12,10 +12,16 @@
           <p class="qtyText">qty: {{ product.quantity }}</p>
 
           <div class="qtyControls">
-            <button class="stepperBtn" (click)="incrementQty()">
+            <button
+              class="stepperBtn"
+              (click)="modifyQty(product.id, product.quantity + 1)"
+            >
               <div class="caretIncrease"></div>
             </button>
-            <button class="stepperBtn" (click)="decrementQty()">
+            <button
+              class="stepperBtn"
+              (click)="modifyQty(product.id, product.quantity - 1)"
+            >
               <div class="caretDecrease"></div>
             </button>
           </div>

@@ -19,7 +19,9 @@ export class CartComponent implements OnInit {
     this._cartData.deleteCartItem(id);
   }
 
-  public incrementQty(): void {}
-
-  public decrementQty(): void {}
+  public modifyQty(id: number, newQty: number): void {
+    if (newQty > 0) {
+      this._cartData.modifyItemQty(id, newQty);
+    }
+  }
 }
