@@ -22,11 +22,15 @@ export class ProductDataService {
     [] as ProductList
   );
   public products$ = this.products.asObservable();
-
-  private productMap: BehaviorSubject<ProductMap> = new BehaviorSubject(
-    {} as ProductMap
+  public productMap$ = this.products$.pipe(
+    map((products) =>
+      products.reduce((map, product) => {
+        console.log('products are being mapped');
+        map[product.id] = product;
+        return map;
+      }, {} as ProductMap)
+    )
   );
-  public productMap$ = this.productMap.asObservable();
 
   constructor(service: ProductAPIService) {
     this.service = service;
@@ -39,6 +43,13 @@ export class ProductDataService {
     }
 
     return this.products$.pipe(map((products) => Object.values(products)));
+  }
+
+  public getProductMap(): Observable<ProductMap> {
+    if (this.shouldFetchProducts()) {
+      this.fetchProducts();
+    }
+    return this.productMap$;
   }
 
   public getProduct(id: string): Observable<Product> {
@@ -96,17 +107,6 @@ export class ProductDataService {
     this.service.fetchSomeProducts().subscribe((products) => {
       this.lastFetchedProducts = new Date();
       this.products.next(products);
-      this.mapProducts(products);
     });
-  }
-
-  private mapProducts(products: ProductList): void {
-    console.log('Mapping Products...');
-    this.productMap.next(
-      products.reduce((map, product) => {
-        map[product.id] = product;
-        return map;
-      }, {} as ProductMap)
-    );
   }
 }

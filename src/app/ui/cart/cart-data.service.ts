@@ -40,11 +40,9 @@ export class CartDataService {
     private _productStateService: ProductDataService
   ) {}
 
-  private updateCart(fromSource: CartFromSource) {}
-
   public async initCart() {
     const productMapAndCart$ = combineLatest([
-      this._productStateService.productMap$,
+      this._productStateService.getProductMap(),
       this._cartAPIService.getCart(),
     ]);
     const cartWithProducts$ = productMapAndCart$.pipe(
