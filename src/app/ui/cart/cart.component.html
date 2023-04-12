@@ -1,4 +1,13 @@
-<p>cart works!</p>
 <div *ngIf="cartData$ | async as cartData">
   {{ cartData.id }}
+  <ul>
+    <li *ngFor="let product of cartData['products']">
+      <p>id: {{ product.id }}</p>
+      <p>title: {{ product.title }}</p>
+      <p>price: {{ product.price }}</p>
+      <p>qty: {{ product.quantity }}</p>
+      <p>description: {{ product.description }}</p>
+      <p>category: {{ product.category }}</p>
+    </li>
+  </ul>
 </div>

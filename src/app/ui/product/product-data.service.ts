@@ -33,7 +33,7 @@ export class ProductDataService {
   }
 
   // access
-  public getProducts(): Observable<ProductList> {
+  public getAllProducts(): Observable<ProductList> {
     if (this.shouldFetchProducts()) {
       this.fetchProducts();
     }

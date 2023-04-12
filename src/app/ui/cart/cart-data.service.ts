@@ -4,83 +4,120 @@ import {
   CartFromSource,
 } from 'src/app/services/api/cart-api.service';
 import {
-  scan,
+  map,
   tap,
   BehaviorSubject,
   firstValueFrom,
   combineLatest,
   Observable,
 } from 'rxjs';
+import { Product } from 'src/app/services/api/productAPI.service';
+import {
+  ProductDataService,
+  ProductMap,
+} from '../product/product-data.service';
+
+export interface ProductInCart extends Product {
+  quantity: number;
+}
+export interface CartWithProducts {
+  date: string;
+  id: number;
+  products: ProductInCart[];
+  userId: number;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartDataService {
-  private cart: BehaviorSubject<CartFromSource> = new BehaviorSubject(
-    {} as CartFromSource
+  private cart: BehaviorSubject<CartWithProducts> = new BehaviorSubject(
+    {} as CartWithProducts
   );
   public cart$ = this.cart.asObservable();
-  constructor(private _cartService: CartAPIService) {}
+  constructor(
+    private _cartAPIService: CartAPIService,
+    private _productStateService: ProductDataService
+  ) {}
+
+  private updateCart(fromSource: CartFromSource) {}
 
   public async initCart() {
-    const fetchedCart = await firstValueFrom(this._cartService.getCart());
-    this.cart.next(fetchedCart);
+    const productMapAndCart$ = combineLatest([
+      this._productStateService.productMap$,
+      this._cartAPIService.getCart(),
+    ]);
+    const cartWithProducts$ = productMapAndCart$.pipe(
+      map<[ProductMap, CartFromSource], CartWithProducts>(
+        ([productMap, cart]) => {
+          const productsInCart: ProductInCart[] = [];
+
+          cart.products.forEach((product) =>
+            productsInCart.push({
+              ...productMap[product.productId],
+              quantity: product.quantity,
+            })
+          );
+
+          return {
+            ...cart,
+            products: productsInCart,
+          };
+        }
+      )
+    );
+    cartWithProducts$.subscribe((c) => this.cart.next(c));
   }
 
   public async addToCart(id: number, qty: number) {
     const cartState = await firstValueFrom(this.cart$);
-    let cartStateAndResp: [
-      Observable<CartFromSource>,
-      Observable<CartFromSource>
-    ];
-
     if (JSON.stringify(cartState) === '{}') {
       console.log('resolving empty cartState case');
-
-      cartStateAndResp = [
-        this._cartService.getCart(),
-        this._cartService.postToCart(id, qty),
-      ];
-    } else {
-      console.log('resolving previously init cartState case');
-
-      cartStateAndResp = [this.cart$, this._cartService.postToCart(id, qty)];
+      this.initCart();
     }
+    const cartStateRespMap: [
+      Observable<CartWithProducts>,
+      Observable<CartFromSource>,
+      Observable<ProductMap>
+    ] = [
+      this.cart$,
+      this._cartAPIService.postToCart(id, qty),
+      this._productStateService.productMap$,
+    ];
 
-    combineLatest(cartStateAndResp)
-      .pipe(
-        tap((comboCart) => {
-          const entireCart = comboCart[0];
-          const postRespCart = comboCart[1];
+    combineLatest(cartStateRespMap).pipe(
+      tap((comboCart) => {
+        const entireCart = comboCart[0];
+        const postRespCart = comboCart[1];
+        const productMap = comboCart[2];
 
-          const productsHash = entireCart.products.reduce(
-            (productsHash, product) => {
-              productsHash[product.productId] = product.quantity;
-              return productsHash;
-            },
-            {} as { [id: string]: number }
-          );
+        const productsQtyHash = entireCart.products.reduce(
+          (productsHash, product) => {
+            productsHash[product.id] = product.quantity;
+            return productsHash;
+          },
+          {} as { [id: string]: number }
+        );
 
-          postRespCart.products.forEach((product) => {
-            if (product.productId in productsHash) {
-              productsHash[product.productId] += product.quantity;
-            } else {
-              productsHash[product.productId] = product.quantity;
-            }
-          });
+        postRespCart.products.forEach((product) => {
+          if (product.productId in productsQtyHash) {
+            productsQtyHash[product.productId] += product.quantity;
+          } else {
+            productsQtyHash[product.productId] = product.quantity;
+          }
+        });
 
-          const mergedProducts = Object.entries(productsHash).map(([k, v]) => {
-            return { productId: +k, quantity: v };
-          });
+        const mergedProducts = Object.entries(productsQtyHash).map(([k, v]) => {
+          return { ...productMap[+k], quantity: v };
+        });
 
-          this.cart.next({
-            id: postRespCart.id,
-            userId: postRespCart.userId,
-            date: postRespCart.date,
-            products: mergedProducts,
-          });
-        })
-      )
-      .subscribe();
+        this.cart.next({
+          id: postRespCart.id,
+          userId: postRespCart.userId,
+          date: postRespCart.date,
+          products: mergedProducts,
+        });
+      })
+    );
   }
 }
