@@ -1,6 +1,6 @@
 import { NgModule, inject } from '@angular/core';
 
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, Router } from '@angular/router';
 import { AuthDataService } from './ui/auth/auth-data.service';
 import { HomeComponent } from './home/home.component';
 import { ProductListComponent } from './ui/product/product-list/product-list.component';
@@ -10,9 +10,11 @@ import { LoginComponent } from './ui/auth/login/login.component';
 
 const authGuard = () => {
   const auth = inject(AuthDataService);
+  const router = inject(Router);
   if (!!auth.getAuthToken()) {
     return true;
   } else {
+    router.navigateByUrl('/login');
     return false;
   }
 };
