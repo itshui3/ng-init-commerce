@@ -10,6 +10,7 @@ import { ProductModule } from './ui/product/product.module';
 import { CartModule } from './ui/cart/cart.module';
 import { HeaderNavComponent } from './home/header-nav/header-nav.component';
 import { FooterInfoComponent } from './home/footer-info/footer-info.component';
+import { AuthModule } from './ui/auth/auth.module';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { FooterInfoComponent } from './home/footer-info/footer-info.component';
     HttpClientModule,
     ProductModule,
     CartModule,
+    AuthModule,
   ],
   providers: [],
   declarations: [

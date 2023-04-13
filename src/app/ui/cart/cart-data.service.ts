@@ -103,8 +103,7 @@ export class CartDataService {
             },
             {} as { [id: string]: number }
           );
-          console.log('productsQtyHash', productsQtyHash);
-          console.log('postRespCart.products', postRespCart.products);
+
           postRespCart.products.forEach((product) => {
             if (product.productId in productsQtyHash) {
               productsQtyHash[product.productId] += product.quantity;
