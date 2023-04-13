@@ -1,9 +1,14 @@
 <div class="headerContainer">
-  <h1 class="heading">hi</h1>
   <h3 class="navLinkContainer">
-    <a routerLink="products" class="navLink">products</a>
+    <a routerLinkActive="active" routerLink="login" class="navLink">login</a>
   </h3>
   <h3 class="navLinkContainer">
-    <a routerLink="cart" class="navLink">cart</a>
+    <a routerLinkActive="active" routerLink="products" class="navLink"
+      >products</a
+    >
   </h3>
+  <h3 class="navLinkContainer">
+    <a routerLinkActive="active" routerLink="cart" class="navLink">cart</a>
+  </h3>
+  <button (click)="logout()">sign out</button>
 </div>

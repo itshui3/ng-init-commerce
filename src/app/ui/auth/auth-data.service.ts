@@ -23,4 +23,8 @@ export class AuthDataService {
   public getAuthToken() {
     return localStorage.getItem(this._storageKey);
   }
+
+  public logout() {
+    localStorage.removeItem(this._storageKey);
+  }
 }
