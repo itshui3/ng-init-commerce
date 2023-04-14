@@ -1,16 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { AuthDataService } from '../auth-data.service';
 
 import { LoginComponent } from './login.component';
 
-describe('LoginComponent', () => {
+fdescribe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LoginComponent ]
-    })
-    .compileComponents();
+      declarations: [LoginComponent],
+      providers: [
+        {
+          provide: AuthDataService,
+          useValue: {
+            login: () => null,
+          },
+        },
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;

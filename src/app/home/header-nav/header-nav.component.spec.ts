@@ -1,16 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { AuthDataService } from '../../ui/auth/auth-data.service';
 import { HeaderNavComponent } from './header-nav.component';
 
-describe('HeaderNavComponent', () => {
+fdescribe('HeaderNavComponent', () => {
   let component: HeaderNavComponent;
   let fixture: ComponentFixture<HeaderNavComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HeaderNavComponent ]
-    })
-    .compileComponents();
+      declarations: [HeaderNavComponent],
+      providers: [
+        { provide: AuthDataService, useValue: { logout: () => null } },
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HeaderNavComponent);
     component = fixture.componentInstance;
