@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, take } from 'rxjs';
 import { CartWithProducts } from 'src/app/ui/cart/cart-data.service';
+import { Product } from './productAPI.service';
 
 export interface CartFromSource {
   date: string;
@@ -24,7 +25,10 @@ export class CartAPIService {
     return this.http.get<CartFromSource>(this.cartURL);
   }
 
-  public postToCart(productId: number, quantity: number) {
+  public postToCart(
+    productId: number,
+    quantity: number
+  ): Observable<CartFromSource> {
     const date = new Date('December 10, 2019');
 
     const year = date.getFullYear();
@@ -40,39 +44,21 @@ export class CartAPIService {
     });
   }
 
-  public deleteCartItem(
-    productId: number,
-    prevCart$: Observable<CartWithProducts>
-  ): void {
-    prevCart$.pipe(take(1)).subscribe((prevCart) => {
-      const newSourceCart: CartToSource = {
-        userId: prevCart.userId,
-        date: prevCart.date,
-        products: prevCart.products
-          .filter((product) => product.id !== productId)
-          .map((product) => {
-            return {
-              productId: product.id,
-              quantity: product.quantity,
-            };
-          }),
-      };
-      this.http.put<{ id: number }>(this.cartURL, newSourceCart);
-    });
-  }
-
   public updateItemQty(
+    cartId: number,
     productId: number,
     quantity: number,
-    prevCart$: Observable<CartWithProducts>
-  ): void {
-    prevCart$.pipe(take(1)).subscribe((prevCart) => {
-      const newSourceCart: CartToSource = {
-        userId: prevCart.userId,
-        date: prevCart.date,
-        products: [{ productId, quantity }],
-      };
-      this.http.patch<{ id: number }>(this.cartURL, newSourceCart);
-    });
+    prevCart: CartWithProducts
+  ): Observable<CartFromSource> {
+    const newSourceCart: CartToSource = {
+      userId: prevCart.userId,
+      date: prevCart.date,
+      products: [{ productId, quantity }],
+    };
+
+    return this.http.patch<CartFromSource>(
+      `${this.cartsURL}/${cartId}`,
+      newSourceCart
+    );
   }
 }

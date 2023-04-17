@@ -8,7 +8,6 @@ import {
   map,
   tap,
   BehaviorSubject,
-  firstValueFrom,
   combineLatest,
   Observable,
 } from 'rxjs';
@@ -130,43 +129,30 @@ export class CartDataService {
   }
 
   public deleteCartItem(id: number): void {
-    this._cartAPIService.deleteCartItem(id, this.cart$);
+    const cart = this.cart.getValue();
 
-    this.cart$
-      .pipe(
-        take(1),
-        tap((cart) => {
-          this.cart.next({
-            ...cart,
-            products: cart.products.filter((product) => product.id !== id),
-          });
-        })
-      )
-      .subscribe();
+    this.cart.next({
+      ...cart,
+      products: cart.products.filter((product) => product.id !== id),
+    });
   }
 
   public modifyItemQty(id: number, newQty: number): void {
-    this._cartAPIService.updateItemQty(id, newQty, this.cart$);
+    const cart = this.cart.getValue();
+    this._cartAPIService.updateItemQty(1, id, newQty, cart).subscribe();
 
-    this.cart$
-      .pipe(
-        take(1),
-        tap((cart) => {
-          this.cart.next({
-            ...cart,
-            products: cart.products.map((product) => {
-              if (product.id === id) {
-                return {
-                  ...product,
-                  quantity: newQty,
-                };
-              } else {
-                return product;
-              }
-            }),
-          });
-        })
-      )
-      .subscribe();
+    this.cart.next({
+      ...cart,
+      products: cart.products.map((product) => {
+        if (product.id === id) {
+          return {
+            ...product,
+            quantity: newQty,
+          };
+        } else {
+          return product;
+        }
+      }),
+    });
   }
 }
