@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpHandler, HttpClient } from '@angular/common/http';
 
 import { AuthDataService } from './auth-data.service';
 
@@ -6,7 +7,9 @@ describe('AuthDataService', () => {
   let service: AuthDataService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [HttpHandler, HttpClient],
+    });
     service = TestBed.inject(AuthDataService);
   });
 
