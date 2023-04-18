@@ -21,7 +21,7 @@ import { AuthModule } from './ui/auth/auth.module';
     CartModule,
     AuthModule,
   ],
-  providers: [],
+  providers: [{ provide: 'LocalStorage', useValue: window.localStorage }],
   declarations: [
     AppComponent,
     HomeComponent,

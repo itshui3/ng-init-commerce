@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { tap } from 'rxjs';
 import { AuthService } from '../../services/api/auth.service';
+import { LocalStorage } from '../../types/localStorage';
 
 @Injectable({
   providedIn: 'root',
@@ -8,19 +9,22 @@ import { AuthService } from '../../services/api/auth.service';
 export class AuthDataService {
   private _storageKey = 'jankToken369';
 
-  constructor(private _authAPI: AuthService) {}
+  constructor(
+    private _authAPI: AuthService,
+    @Inject('LocalStorage') private _localStorage: LocalStorage
+  ) {}
 
   public login() {
     return this._authAPI
       .signInUser()
-      .pipe(tap((r) => localStorage.setItem(this._storageKey, r.token)));
+      .pipe(tap((r) => this._localStorage.setItem(this._storageKey, r.token)));
   }
 
   public getAuthToken(): string | null {
-    return localStorage.getItem(this._storageKey);
+    return this._localStorage.getItem(this._storageKey);
   }
 
   public logout(): void {
-    localStorage.removeItem(this._storageKey);
+    this._localStorage.removeItem(this._storageKey);
   }
 }

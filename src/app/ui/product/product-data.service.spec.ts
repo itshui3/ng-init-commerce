@@ -19,7 +19,7 @@ const mockProduct = {
 const mockProductList: ProductList = [mockProduct];
 const mockProductMap: ProductMap = { '1': mockProduct };
 
-fdescribe('ProductDataService', () => {
+describe('ProductDataService', () => {
   let service: ProductDataService;
 
   beforeEach(() => {
