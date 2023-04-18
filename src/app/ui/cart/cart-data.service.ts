@@ -84,7 +84,7 @@ export class CartDataService {
     ] = [
       this.cart$,
       this._cartAPIService.postToCart(id, qty),
-      this._productStateService.productMap$,
+      this._productStateService.getProductMap(),
     ];
 
     combineLatest(cartStateRespMap)

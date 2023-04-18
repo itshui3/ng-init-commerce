@@ -10,6 +10,6 @@ export class LoginComponent {
   constructor(private _authService: AuthDataService) {}
 
   public signIn() {
-    this._authService.login();
+    this._authService.login().subscribe();
   }
 }

@@ -11,20 +11,16 @@ export class AuthDataService {
   constructor(private _authAPI: AuthService) {}
 
   public login() {
-    if (localStorage.getItem(this._storageKey)) {
-      return;
-    }
-    this._authAPI
+    return this._authAPI
       .signInUser()
-      .pipe(tap((r) => localStorage.setItem(this._storageKey, r.token)))
-      .subscribe();
+      .pipe(tap((r) => localStorage.setItem(this._storageKey, r.token)));
   }
 
-  public getAuthToken() {
+  public getAuthToken(): string | null {
     return localStorage.getItem(this._storageKey);
   }
 
-  public logout() {
+  public logout(): void {
     localStorage.removeItem(this._storageKey);
   }
 }
