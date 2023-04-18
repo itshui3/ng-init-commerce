@@ -22,7 +22,7 @@ const mockLocalStorage = {
 
 const mockTokenResponse: ResponseToken = { token: 'asdf' };
 
-fdescribe('AuthDataService', () => {
+describe('AuthDataService', () => {
   let service: AuthDataService;
 
   beforeEach(() => {
